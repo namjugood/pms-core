@@ -1,102 +1,135 @@
-# Package script for v2.0.0
+# Package script for v2.0.0 (Versioned Folder Strategy)
 $version = "2.0.0"
 $packageRoot = "package"
 $sevenZip = ".\node_modules\7zip-bin\win\x64\7za.exe"
+
+# [변경됨] 고정된 이름이 아니라 버전을 포함한 폴더명 사용
+$dirName = "pms-core_v$version"       # 예: pms-core_v2.0.0
+$pmsCore = "$packageRoot\$dirName"    # 전체 경로
+
 $winUnpacked = "$packageRoot\win-unpacked"
-$pmsCore = "$packageRoot\pms-core"
-$file7z = "$packageRoot\pms-core_v$version.7z"
+$file7z = "$packageRoot\${dirName}.7z" # 압축파일도 버전 따라감
+$appName = "pms-core"
 
+# 진행률 표시 헬퍼
+function Update-JobProgress {
+    param ( [int]$Percent, [string]$Status )
+    Write-Progress -Activity "PMS-Core v$version Packaging" -Status $Status -PercentComplete $Percent
+}
+
+# 폴더 삭제/이동 함수 (같은 버전을 재빌드할 때를 대비해 유지)
+function Nuke-Folder {
+    param ([string]$Path)
+    if (Test-Path $Path) {
+        Write-Host "   Targeting '$Path'..." -NoNewline
+        Remove-Item $Path -Recurse -Force -ErrorAction SilentlyContinue
+        
+        if (Test-Path $Path) {
+            cmd /c "rd /s /q `"$Path`"" 2>$null
+            if (Test-Path $Path) {
+                # 삭제 안 되면 Temp로 이동 (이름 바꾸기 전략)
+                $trashPath = "$env:TEMP\pms-trash-" + (Get-Random)
+                try {
+                    Move-Item -Path $Path -Destination $trashPath -Force -ErrorAction Stop
+                    Write-Host " [MOVED to TEMP]" -ForegroundColor Yellow
+                } catch {
+                    Write-Host " [LOCKED]" -ForegroundColor Red
+                    Write-Host "❌ Error: Cannot remove/move existing version folder." -ForegroundColor Red
+                    exit 1
+                }
+            } else { Write-Host " [DELETED]" -ForegroundColor Green }
+        } else { Write-Host " [DELETED]" -ForegroundColor Green }
+    }
+}
+
+# 터미널 위치 안전장치
+$absTarget = Resolve-Path $pmsCore -ErrorAction SilentlyContinue
+if ($absTarget -and $PWD.Path.StartsWith($absTarget.Path)) {
+    Set-Location "$packageRoot\.."
+}
+
+Clear-Host
+Update-JobProgress -Percent 0 -Status "Initializing..."
 Write-Host "========================================" -ForegroundColor Green
-Write-Host "PMS-Core v$version Packaging" -ForegroundColor Green
+Write-Host "PMS-Core Packaging: $dirName" -ForegroundColor Green
 Write-Host "========================================" -ForegroundColor Green
 Write-Host ""
 
-# [0/3] Clean up previous builds
-Write-Host "[0/3] Cleaning up previous artifacts..." -ForegroundColor Cyan
-
-# 1. win-unpacked 폴더가 있으면 삭제 (이전 빌드 잔여물)
-if (Test-Path $winUnpacked) {
-    Write-Host "Removing old win-unpacked..." -ForegroundColor Gray
-    Remove-Item $winUnpacked -Recurse -Force
+# [0/4] Process Check
+Update-JobProgress -Percent 5 -Status "Checking processes..."
+$runningProc = Get-Process -Name $appName -ErrorAction SilentlyContinue
+if ($runningProc) {
+    Write-Host "⚠️  Killing running app..." -ForegroundColor Yellow
+    Stop-Process -Name $appName -Force -ErrorAction SilentlyContinue
+    Start-Sleep -Seconds 1
 }
 
-# 2. pms-core 폴더가 있으면 삭제 (이전 패키징 잔여물)
+# [1/4] Clean Workspace
+Update-JobProgress -Percent 10 -Status "Step 1/4: Preparing workspace..."
+Write-Host "[Clean] Clearing target paths..." -ForegroundColor Cyan
+
+# win-unpacked 삭제
+Nuke-Folder $winUnpacked
+
+# [중요] '이번 버전'의 폴더만 삭제 시도 (이전 버전 폴더는 건드리지 않음)
 if (Test-Path $pmsCore) {
-    Write-Host "Removing old pms-core..." -ForegroundColor Gray
-    Remove-Item $pmsCore -Recurse -Force
+    Write-Host "Found existing build for v$version. Overwriting..." -ForegroundColor Yellow
+    Nuke-Folder $pmsCore
 }
 
-# 3. 기존 7z 파일 삭제
-if (Test-Path $file7z) {
-    Write-Host "Removing old archive..." -ForegroundColor Gray
-    Remove-Item $file7z -Force
+# 이번 버전의 압축파일 삭제
+if (Test-Path $file7z) { Remove-Item $file7z -Force }
+
+# 널브러진 파일 정리
+if (Test-Path $packageRoot) {
+    Get-ChildItem -Path $packageRoot -Include *.exe, *.dll, *.bin, *.dat -File | Remove-Item -Force
 }
 
-Write-Host "Cleanup completed!" -ForegroundColor Green
-Write-Host ""
-
-# [1/3] Build and Pack
-Write-Host "[1/3] Building and packing..." -ForegroundColor Cyan
+# [2/4] Build & Pack
+Update-JobProgress -Percent 30 -Status "Step 2/4: Building & Packing..."
+Write-Host "[Build] Running npm run build..." -ForegroundColor Cyan
 npm run build
-if ($LASTEXITCODE -ne 0) { 
-    Write-Host "Build failed!" -ForegroundColor Red
-    exit 1 
-}
+if ($LASTEXITCODE -ne 0) { Write-Host "Build failed!" -ForegroundColor Red; exit 1 }
 
-# Run pack but don't fail on code signing errors
-# win-unpacked 폴더가 새로 생성됨
-npm run pack 2>&1 | Out-Null
-
-# Check if win-unpacked exists (the important part)
+Write-Host "[Pack] Running npm run pack..." -ForegroundColor Cyan
+npm run pack
 if (!(Test-Path $winUnpacked)) {
-    Write-Host "Error: Build directory not found!" -ForegroundColor Red
+    Write-Host "Error: 'win-unpacked' creation failed!" -ForegroundColor Red
     exit 1
 }
-Write-Host "Build completed!" -ForegroundColor Green
-Write-Host ""
 
-# [2/3] Create pms-core structure
-Write-Host "[2/3] Creating pms-core structure..." -ForegroundColor Cyan
+# [3/4] Organize (Versioned Folder)
+Update-JobProgress -Percent 60 -Status "Step 3/4: Creating versioned folder..."
+Write-Host "[Organize] Renaming to $dirName..." -ForegroundColor Cyan
 
-# win-unpacked를 pms-core로 이름 변경 (이동)
+# win-unpacked -> pms-core_v2.0.0
 Move-Item $winUnpacked $pmsCore -Force
 
-Write-Host "pms-core directory created!" -ForegroundColor Green
-Write-Host ""
+# [4/4] Compress
+Update-JobProgress -Percent 80 -Status "Step 4/4: Compressing..."
+Write-Host "[Compress] Creating 7z archive..." -ForegroundColor Cyan
 
-# [3/3] Create 7z archive
-Write-Host "[3/3] Creating 7z archive..." -ForegroundColor Cyan
-
-# Create 7z with pms-core folder structure
 Push-Location $packageRoot
-& "..\$sevenZip" a -t7z -mx9 "pms-core_v$version.7z" "pms-core" -r
+# 압축 파일 안에 pms-core_v2.0.0 폴더가 들어가도록 설정
+& "..\$sevenZip" a -t7z -mx9 "${dirName}.7z" "$dirName" -r
 $exitCode = $LASTEXITCODE
 Pop-Location
 
 if ($exitCode -eq 0 -and (Test-Path $file7z)) {
+    Update-JobProgress -Percent 100 -Status "Done!"
     $size = (Get-Item $file7z).Length / 1MB
     Write-Host ""
     Write-Host "========================================" -ForegroundColor Green
-    Write-Host "Packaging Completed!" -ForegroundColor Green
+    Write-Host "SUCCESS!" -ForegroundColor Green
     Write-Host "========================================" -ForegroundColor Green
+    Write-Host "Folder: package\$dirName" -ForegroundColor Cyan
+    Write-Host "File:   $file7z" -ForegroundColor Yellow
+    Write-Host "Size:   $("{0:N2}" -f $size) MB" -ForegroundColor Yellow
     Write-Host ""
-    Write-Host "Package: $file7z" -ForegroundColor Yellow
-    Write-Host "Size: $("{0:N2}" -f $size) MB" -ForegroundColor Yellow
-    Write-Host "Structure: pms-core/" -ForegroundColor Cyan
-    Write-Host ""
-    Write-Host "Contents:" -ForegroundColor Cyan
-    Write-Host "- pms-core/" -ForegroundColor White
-    Write-Host "  - 기여도 평가 점수 프로그램.exe" -ForegroundColor White
-    Write-Host "  - resources/" -ForegroundColor White
-    Write-Host "  - locales/" -ForegroundColor White
-    Write-Host "  - ..." -ForegroundColor White
-    Write-Host ""
-    Write-Host "Usage:" -ForegroundColor Cyan
-    Write-Host "1. Extract pms-core_v$version.7z" -ForegroundColor White
-    Write-Host "2. Run pms-core/기여도 평가 점수 프로그램.exe" -ForegroundColor White
-    Write-Host ""
+    Write-Host "Note: Previous version folders were NOT deleted." -ForegroundColor Gray
+    Start-Sleep -Seconds 1
+    Write-Progress -Activity "PMS-Core v$version Packaging" -Completed
 } else {
-    Write-Host ""
-    Write-Host "Error: Failed to create 7z file" -ForegroundColor Red
+    Write-Host "Error: Compression failed" -ForegroundColor Red
     exit 1
 }
