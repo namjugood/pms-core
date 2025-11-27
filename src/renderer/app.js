@@ -43,6 +43,17 @@ function setupMenuListeners() {
   ipcRenderer.on('menu-validate', () => {
     handleValidate();
   });
+
+  // [추가] PDF Export 메뉴
+  ipcRenderer.on('menu-export-pdf', () => {
+    // window 객체에 등록된 함수를 호출
+    if (window.exportToPDF) {
+      window.exportToPDF();
+    } else {
+      console.error('exportToPDF function not found. Please check pdf-exporter.js');
+      alert('PDF 내보내기 기능을 찾을 수 없습니다.');
+    }
+  });
 }
 
 /**

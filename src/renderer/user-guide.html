@@ -4,321 +4,133 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>사용자 가이드</title>
-  <style>
-    :root {
-      --bg-primary: #1e1e1e;
-      --bg-secondary: #2d2d30;
-      --bg-tertiary: #3e3e42;
-      --text-primary: #cccccc;
-      --text-secondary: #9d9d9d;
-      --accent-blue: #0e639c;
-      --accent-green: #4ec973;
-      --border-color: #3e3e42;
-    }
-
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    body {
-      font-family: 'Segoe UI', 'Malgun Gothic', sans-serif;
-      background-color: var(--bg-primary);
-      color: var(--text-primary);
-      padding: 30px;
-      line-height: 1.6;
-    }
-
-    .guide-container {
-      max-width: 900px;
-      margin: 0 auto;
-    }
-
-    h1 {
-      color: var(--accent-green);
-      font-size: 32px;
-      margin-bottom: 10px;
-      border-bottom: 3px solid var(--accent-green);
-      padding-bottom: 10px;
-    }
-
-    .version {
-      color: var(--text-secondary);
-      font-size: 14px;
-      margin-bottom: 30px;
-    }
-
-    h2 {
-      color: var(--accent-blue);
-      font-size: 24px;
-      margin-top: 30px;
-      margin-bottom: 15px;
-      border-left: 4px solid var(--accent-blue);
-      padding-left: 12px;
-    }
-
-    h3 {
-      color: var(--text-primary);
-      font-size: 18px;
-      margin-top: 20px;
-      margin-bottom: 10px;
-    }
-
-    p {
-      margin-bottom: 15px;
-      color: var(--text-primary);
-    }
-
-    ul, ol {
-      margin-left: 25px;
-      margin-bottom: 15px;
-    }
-
-    li {
-      margin-bottom: 8px;
-      color: var(--text-primary);
-    }
-
-    .feature-box {
-      background-color: var(--bg-secondary);
-      border-left: 4px solid var(--accent-green);
-      padding: 15px 20px;
-      margin: 15px 0;
-      border-radius: 4px;
-    }
-
-    .update-box {
-      background-color: var(--bg-secondary);
-      border-left: 4px solid #f48771; /* 업데이트 강조색 (Red/Orange 계열) */
-      padding: 15px 20px;
-      margin: 15px 0;
-      border-radius: 4px;
-    }
-
-    .shortcut-table {
-      width: 100%;
-      border-collapse: collapse;
-      margin: 15px 0;
-      background-color: var(--bg-secondary);
-    }
-
-    .shortcut-table th,
-    .shortcut-table td {
-      padding: 12px;
-      text-align: left;
-      border-bottom: 1px solid var(--border-color);
-    }
-
-    .shortcut-table th {
-      background-color: var(--bg-tertiary);
-      color: var(--accent-green);
-      font-weight: 600;
-    }
-
-    .shortcut-table td:first-child {
-      font-family: 'Consolas', monospace;
-      color: var(--accent-blue);
-      font-weight: 500;
-    }
-
-    .warning {
-      background-color: rgba(244, 135, 113, 0.1);
-      border-left: 4px solid #f48771;
-      padding: 15px 20px;
-      margin: 15px 0;
-      border-radius: 4px;
-    }
-
-    .tip {
-      background-color: rgba(78, 201, 115, 0.1);
-      border-left: 4px solid var(--accent-green);
-      padding: 15px 20px;
-      margin: 15px 0;
-      border-radius: 4px;
-    }
-
-    code {
-      background-color: var(--bg-tertiary);
-      padding: 2px 6px;
-      border-radius: 3px;
-      font-family: 'Consolas', monospace;
-      color: var(--accent-green);
-    }
-
-    .example {
-      background-color: var(--bg-tertiary);
-      padding: 15px;
-      border-radius: 4px;
-      margin: 15px 0;
-      font-family: 'Consolas', monospace;
-      font-size: 14px;
-    }
-
-    .close-btn {
-      position: fixed;
-      top: 20px;
-      right: 30px;
-      background-color: var(--accent-blue);
-      color: white;
-      border: none;
-      padding: 10px 20px;
-      border-radius: 4px;
-      cursor: pointer;
-      font-size: 14px;
-      transition: all 0.2s;
-    }
-
-    .close-btn:hover {
-      background-color: #1177bb;
-      transform: translateY(-2px);
-    }
-
-    ::-webkit-scrollbar {
-      width: 12px;
-    }
-
-    ::-webkit-scrollbar-track {
-      background: var(--bg-primary);
-    }
-
-    ::-webkit-scrollbar-thumb {
-      background: var(--bg-tertiary);
-      border-radius: 6px;
-    }
-
-    ::-webkit-scrollbar-thumb:hover {
-      background: #505050;
-    }
-  </style>
+  <link rel="stylesheet" href="./styles/user-guide.css">
 </head>
 <body>
   <button class="close-btn" onclick="window.close()">닫기</button>
   
-  <div class="guide-container">
-    <h1>📖 기여도 평가 점수 프로그램 사용자 가이드</h1>
-    <p class="version">현재 버전: v2.0.0</p>
-
-    <h2>✨ v2.0 주요 업데이트 내역</h2>
-    <div class="update-box">
-      <p>최신 버전에서 개선된 주요 기능입니다.</p>
-      <ul>
-        <li><strong>점수 산정 방식 변경 (Global Averaging)</strong>:
-          <ul>
-            <li><strong>비중(Weight)</strong>: 각 탭별로 독립적으로 합산됩니다 (각 탭 내 100% 기준).</li>
-            <li><strong>점수(Score)</strong>: 모든 탭의 점수를 합산한 뒤, <strong>전체 탭 개수(N)로 나눈 평균값</strong>이 표시됩니다.</li>
-          </ul>
-        </li>
-        <li><strong>입력 안정성 강화</strong>: 탭을 닫거나 전환할 때 발생하던 입력 불가(먹통) 현상을 완전히 해결했습니다.</li>
-        <li><strong>시각적 개선</strong>: 점수 증감에 따라 화살표(▲/▼)와 색상으로 차이를 직관적으로 보여줍니다.</li>
-        <li><strong>입력 편의성</strong>: 숫자 '0' 입력 시 사라지지 않도록 개선되었으며, 파일 불러오기 시 불필요한 빈 행이 생성되지 않습니다.</li>
-      </ul>
-    </div>
-
-    <h2>🎯 프로그램 소개</h2>
-    <p>여러분의 기여도 평가를 전략적으로 관리할 수 있도록 만든 프로그램입니다.</p>
-    
-    <div class="feature-box">
-      <strong>주요 기능</strong>
-      <ul>
-        <li>다중 탭 지원으로 여러 프로젝트 관리</li>
-        <li>실시간 자동 계산 및 전체 평균 산출</li>
-        <li>현재/이전 평가 비교 및 증감 표시</li>
-        <li>안전한 데이터 저장 (.dat 파일)</li>
-        <li>복사 붙여넣기 가능</li>
-      </ul>
-    </div>
-
-    <h2>🚀 빠른 시작</h2>
-    
-    <h3>1. 탭 관리</h3>
-    <ul>
-      <li><strong>탭 추가</strong>: 오른쪽 상단 '+' 버튼 클릭</li>
-      <li><strong>탭 이름 변경</strong>: 탭 이름을 더블클릭하여 변경 (인라인 편집)</li>
-      <li><strong>탭 전환</strong>: 탭을 클릭하여 전환</li>
-      <li><strong>탭 닫기</strong>: 탭 우측 '×' 버튼 클릭 (최소 1개 유지)</li>
-    </ul>
-
-    <h3>2. 데이터 입력</h3>
-    <ol>
-      <li><strong>행 추가</strong>: 우측 상단 "+ 행 추가" 버튼 클릭</li>
-      <li><strong>설명</strong>: 업무/프로젝트 설명 입력 (여러 줄 가능)</li>
-      <li><strong>날짜</strong>: 
-        <ul>
-          <li>직접 입력: <code>20240115</code> 입력 후 Tab/Enter</li>
-          <li>달력 선택: 📅 아이콘 클릭하여 선택</li>
-          <li>표시 형식: <code>2024.01.15</code></li>
-        </ul>
-      </li>
-      <li><strong>이전 비중/점수</strong>: 참고용 이전 평가 데이터</li>
-      <li><strong>비중</strong>: 0~100% (탭 내 합계 100% 권장)</li>
-      <li><strong>점수</strong>: 0~100점</li>
-    </ol>
-
-    <div class="tip">
-      <strong>💡 Tip:</strong> 입력한 점수는 전체 탭 개수로 나누어 평균이 계산되므로, 탭을 추가하거나 삭제하면 전체 예상 점수가 변동될 수 있습니다.
-    </div>
-
-    <h2>💾 파일 관리</h2>
-
-    <h3>저장하기</h3>
-    <ul>
-      <li><strong>Save (Ctrl+S)</strong>: 현재 파일에 빠르게 저장</li>
-      <li><strong>Save As (Ctrl+Shift+S)</strong>: 다른 이름으로 저장</li>
-      <li>모든 탭의 데이터가 하나의 .dat 파일에 저장됩니다</li>
-    </ul>
-
-    <h3>불러오기</h3>
-    <ul>
-      <li><strong>Load (Ctrl+O)</strong>: 저장된 파일 불러오기</li>
-      <li>모든 탭과 데이터가 복원되며, 기존 작업 내용은 초기화됩니다.</li>
-    </ul>
-
-    <h2>⌨️ 키보드 단축키</h2>
-    
-    <table class="shortcut-table">
-      <thead>
-        <tr>
-          <th>단축키</th>
-          <th>기능</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>Ctrl + S</td>
-          <td>저장</td>
-        </tr>
-        <tr>
-          <td>Ctrl + Shift + S</td>
-          <td>다른 이름으로 저장</td>
-        </tr>
-        <tr>
-          <td>Ctrl + O</td>
-          <td>파일 불러오기</td>
-        </tr>
-        <tr>
-          <td>Ctrl + Shift + V</td>
-          <td>유효성 검사</td>
-        </tr>
-        <tr>
-          <td>Ctrl + Z</td>
-          <td>실행 취소</td>
-        </tr>
-        <tr>
-          <td>Ctrl + C / V</td>
-          <td>복사 / 붙여넣기</td>
-        </tr>
-        <tr>
-          <td>Tab</td>
-          <td>다음 필드로 이동</td>
-        </tr>
-      </tbody>
-    </table>
-
-    <div style="margin-top: 50px; padding-top: 20px; border-top: 1px solid var(--border-color); text-align: center; color: var(--text-secondary);">
-      <p>기여도 평가 점수 프로그램 v2.0.0</p>
-      <p style="margin-top: 10px;">© 2024 All rights reserved.</p>
-    </div>
+  <div class="guide-header">
+    <h1>📖 기여도 평가 점수 프로그램</h1>
+    <p class="version">Version 2.1.0</p>
   </div>
+
+  <div class="tabs-nav">
+    <button class="tab-btn active" onclick="openTab('guide')">사용자 가이드</button>
+    <button class="tab-btn" onclick="openTab('updates')">업데이트 내역</button>
+  </div>
+
+  <div class="content-wrapper">
+    
+    <div id="guide" class="tab-content active">
+      <h2>🎯 프로그램 소개</h2>
+      <p>여러분의 기여도 평가와 경력 작성을 전략적으로 관리할 수 있도록 만든 프로그램입니다.</p>
+      
+      <div class="feature-box">
+        <strong>주요 기능</strong>
+        <ul>
+          <li>다중 탭 지원으로 여러 프로젝트 관리</li>
+          <li>실시간 자동 계산 및 전체 평균 산출</li>
+          <li><strong>경력 기술서 PDF 내보내기</strong> (미리보기 지원)</li>
+          <li>안전한 데이터 저장 (.dat 파일)</li>
+        </ul>
+      </div>
+
+      <h2>🚀 빠른 시작</h2>
+      <h3>1. 탭 관리</h3>
+      <ul>
+        <li><strong>탭 추가</strong>: 오른쪽 상단 '+' 버튼 클릭</li>
+        <li><strong>탭 이름 변경</strong>: 탭 이름을 더블클릭하여 변경 (인라인 편집)</li>
+        <li><strong>탭 전환</strong>: 탭을 클릭하여 전환</li>
+        <li><strong>탭 닫기</strong>: 탭 우측 '×' 버튼 클릭</li>
+      </ul>
+
+      <h3>2. 데이터 입력</h3>
+      <ol>
+        <li><strong>행 추가</strong>: 우측 상단 "+ 행 추가" 버튼 클릭</li>
+        <li><strong>설명</strong>: 업무/프로젝트 성과 입력 (여러 줄 가능)</li>
+        <li><strong>날짜</strong>: <code>20240115</code> 입력 후 Enter 또는 📅 아이콘 클릭</li>
+        <li><strong>비중</strong>: 0~100% (탭 내 합계 100% 권장)</li>
+        <li><strong>점수</strong>: 0~100점 (입력 즉시 자동 계산)</li>
+      </ol>
+
+      <div class="tip">
+        <strong>💡 Tip:</strong> 입력한 점수는 전체 탭 개수로 나누어 평균이 계산되므로, 프로젝트(탭) 수에 따라 전체 예상 점수가 변동될 수 있습니다.
+      </div>
+
+      <h2>📄 파일 및 출력</h2>
+      <ul>
+        <li><strong>저장 (Ctrl+S)</strong>: 작업 내용 저장</li>
+        <li><strong>불러오기 (Ctrl+O)</strong>: 저장된 파일 복원</li>
+        <li><strong>PDF 내보내기 (Ctrl+P)</strong>: 경력 기술서 양식으로 변환하여 저장</li>
+      </ul>
+
+      <h2>⌨️ 키보드 단축키</h2>
+      <table class="shortcut-table">
+        <thead>
+          <tr>
+            <th>단축키</th>
+            <th>기능</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Ctrl + S</td><td>저장</td></tr>
+          <tr><td>Ctrl + Shift + S</td><td>다른 이름으로 저장</td></tr>
+          <tr><td>Ctrl + O</td><td>파일 불러오기</td></tr>
+          <tr><td>Ctrl + P</td><td>PDF 내보내기 (미리보기)</td></tr>
+          <tr><td>Ctrl + Wheel</td><td>미리보기 확대/축소</td></tr>
+          <tr><td>Ctrl + Shift + V</td><td>유효성 검사</td></tr>
+          <tr><td>Ctrl + Z</td><td>실행 취소</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div id="updates" class="tab-content">
+      <h2>✨ v2.1.0 주요 업데이트 (Current)</h2>
+      <div class="update-box">
+        <p><strong>경력 기술서 작성에 최적화된 기능이 추가되었습니다.</strong></p>
+        <ul>
+          <li><strong>PDF 내보내기 기능 강화</strong>:
+            <ul>
+              <li><strong>미리보기 창 제공</strong>: 저장 전 내용 확인 가능</li>
+              <li><strong>확대/축소 지원</strong>: <code>Ctrl + 마우스 휠</code>로 자유롭게 조절</li>
+              <li><strong>자동 서식 적용</strong>: 경력 기술서 작성용 양식 적용</li>
+              <li><strong>기간 자동 산출</strong>: 입력된 날짜 중 최솟값/최댓값을 찾아 총 기간 표시</li>
+            </ul>
+          </li>
+          <li><strong>UI/UX 개선</strong>:
+            <ul>
+              <li>미리보기 디자인 개선 (가독성 향상, Zebra Striping 적용)</li>
+              <li>스크롤 및 레이아웃 최적화</li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+
+      <h3>📅 히스토리</h3>
+      <ul>
+        <li><strong>v2.0.0</strong>: 점수 산정 방식 변경(Global Averaging), 기본 PDF 내보내기 탑재, 데이터 구조 개편</li>
+        <li><strong>v1.1.0</strong>: 탭 기능 도입, 다크 모드 테마 적용</li>
+        <li><strong>v1.0.0</strong>: 초기 릴리즈, 기본 점수 계산 기능</li>
+      </ul>
+    </div>
+
+  </div>
+
+  <script>
+    function openTab(tabId) {
+      const contents = document.querySelectorAll('.tab-content');
+      contents.forEach(content => content.classList.remove('active'));
+
+      const buttons = document.querySelectorAll('.tab-btn');
+      buttons.forEach(btn => btn.classList.remove('active'));
+
+      document.getElementById(tabId).classList.add('active');
+      
+      const targetBtn = Array.from(buttons).find(btn => 
+        btn.getAttribute('onclick').includes(`'${tabId}'`)
+      );
+      if (targetBtn) targetBtn.classList.add('active');
+    }
+  </script>
 </body>
 </html>

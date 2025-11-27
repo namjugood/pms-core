@@ -660,3 +660,124 @@ input[type="checkbox"] {
   }
 }
 
+/* --- PDF 미리보기 모달 스타일 --- */
+.modal-overlay {
+  display: none; /* 기본적으로 숨김 */
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.75);
+  z-index: 1000;
+  justify-content: center;
+  align-items: center;
+  backdrop-filter: blur(3px);
+}
+
+.modal-container {
+  width: 90%;
+  height: 90%;
+  max-width: 1200px;
+  background-color: var(--bg-secondary);
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+  border: 1px solid var(--border-color);
+}
+
+.modal-header {
+  padding: 15px 20px;
+  background-color: var(--bg-tertiary);
+  border-bottom: 1px solid var(--border-color);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-radius: 8px 8px 0 0;
+}
+
+.modal-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.modal-controls {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.zoom-controls {
+  display: flex;
+  align-items: center;
+  background-color: var(--bg-primary);
+  border-radius: 4px;
+  padding: 2px;
+  margin-right: 15px;
+  border: 1px solid var(--border-color);
+}
+
+.btn-zoom {
+  background: none;
+  border: none;
+  color: var(--text-primary);
+  width: 30px;
+  height: 30px;
+  font-size: 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 2px;
+}
+
+.btn-zoom:hover {
+  background-color: var(--bg-hover);
+}
+
+.zoom-level {
+  min-width: 50px;
+  text-align: center;
+  font-size: 13px;
+  font-family: monospace;
+  color: var(--text-secondary);
+}
+
+.preview-body {
+  flex: 1;
+  background-color: #525659;
+  padding: 40px;
+  overflow: auto; /* 스크롤은 여기서 발생 */
+  display: flex;
+  justify-content: center; /* 중앙 정렬 */
+  align-items: flex-start; /* 위쪽 정렬 */
+}
+
+/* [추가] iframe을 감싸는 래퍼 (크기 조절용) */
+#iframe-wrapper {
+  /* 내부 iframe이 transform으로 커질 때 공간을 확보해줌 */
+  transition: width 0.1s ease, height 0.1s ease;
+  transform-origin: top left;
+  margin: auto; /* 중앙 정렬 보조 */
+  flex-shrink: 0; /* 축소 방지 */
+}
+
+/* iframe 스타일 수정 */
+#pdf-preview-iframe {
+  width: 210mm; /* A4 너비 고정 */
+  height: 0;    /* JS로 조절 */
+  background-color: white;
+  border: none;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+  
+  /* [핵심] scale 사용을 위한 설정 */
+  transform-origin: top left; /* 왼쪽 위 기준으로 확대 */
+  transition: transform 0.1s ease;
+  overflow: hidden;
+  display: block; /* 하단 공백 방지 */
+}

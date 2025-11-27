@@ -1,0 +1,114 @@
+/* src/renderer/styles/pdf.css */
+
+/* 인쇄 및 PDF 전용 스타일 */
+@page { 
+    margin: 0; /* 여백은 Electron 옵션에서 제어하거나 필요시 여기서 20mm 등으로 설정 */
+    size: A4;
+  }
+  
+  body { 
+    font-family: 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif; 
+    padding: 20mm; /* A4 용지 내부 여백 */
+    margin: 0;
+    color: #333;
+    background: white !important; /* 앱이 다크모드여도 PDF는 흰색 유지 */
+    overflow: hidden;
+    box-sizing: border-box;
+  }
+  
+  .header {
+    text-align: center;
+    margin-bottom: 30px;
+    border-bottom: 2px solid #333;
+    padding-bottom: 15px;
+  }
+  
+  h1 { 
+    font-size: 24px; 
+    margin: 0; 
+    color: #1a1a1a;
+    letter-spacing: -0.5px;
+  }
+  
+  .meta-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-top: 10px;
+    font-size: 13px;
+    color: #555;
+  }
+  
+  /* [추가] 총 기간 스타일 */
+  .total-period {
+    font-weight: 600;
+    color: #333;
+    font-size: 14px;
+  }
+  
+  .total-period span {
+    font-weight: 400;
+    color: #666;
+    margin-right: 5px;
+  }
+  
+  .report-date {
+    color: #888;
+    font-size: 12px;
+  }
+  
+  table { 
+    width: 100%; 
+    border-collapse: collapse; 
+    font-size: 13px;
+    line-height: 1.5;
+  }
+  
+  /* 테이블 헤더 */
+  th { 
+    background-color: #f3f4f6 !important;
+    color: #111;
+    font-weight: 700; 
+    text-align: center; 
+    padding: 10px 8px;
+    border-top: 2px solid #4a4a4a;
+    border-bottom: 1px solid #c0c0c0;
+    border-left: 1px solid #e0e0e0;
+    border-right: 1px solid #e0e0e0;
+    -webkit-print-color-adjust: exact;
+  }
+  
+  th:first-child { border-left: none; }
+  th:last-child { border-right: none; }
+  
+  /* 테이블 셀 */
+  td { 
+    padding: 12px 10px; 
+    border-bottom: 1px solid #e0e0e0;
+    border-left: 1px solid #f0f0f0;
+    border-right: 1px solid #f0f0f0;
+    vertical-align: top;
+    word-break: break-all;
+  }
+  
+  td:first-child { border-left: none; }
+  td:last-child { border-right: none; }
+  
+  /* 줄무늬 효과 */
+  tbody tr:nth-child(even) {
+    background-color: #fafafa !important;
+    -webkit-print-color-adjust: exact;
+  }
+  
+  /* 유틸리티 클래스 */
+  .cell-center { text-align: center; }
+  .cell-left { text-align: left; }
+  
+  .category { font-weight: 600; color: #444; }
+  .period { color: #666; font-size: 12px; white-space: nowrap; letter-spacing: -0.3px; }
+  .outcome { color: #222; line-height: 1.6; }
+  
+  /* 컬럼 너비 */
+  col.w-category { width: 15%; }
+  col.w-period { width: 22%; }
+  col.w-outcome { width: 63%; }
