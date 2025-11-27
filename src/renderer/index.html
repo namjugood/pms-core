@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>기여도 평가 점수 프로그램</title>
+  <link rel="stylesheet" href="styles/main.css">
+</head>
+<body>
+  <div class="app-container">
+    <!-- 헤더 -->
+    <header class="app-header">
+      <h1>기여도 평가 점수 프로그램</h1>
+    </header>
+
+    <!-- 탭 네비게이션 -->
+    <div class="tab-navigation">
+      <div class="tabs-container" id="tabs-container">
+        <!-- 탭들이 동적으로 추가됨 -->
+      </div>
+      <button class="btn-add-tab" id="add-tab-btn" title="새 탭 추가">+</button>
+    </div>
+
+    <!-- 탭 컨텐츠 컨테이너 -->
+    <div id="tab-contents-wrapper">
+  </div>
+
+  <!-- 스크립트 -->
+  <script src="utils/calculator.js"></script>
+  <script src="utils/validation.js"></script>
+  <script src="components/tabs-manager.js"></script>
+  <script src="components/table.js"></script>
+  <script src="components/summary.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
+
